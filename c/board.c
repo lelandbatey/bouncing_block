@@ -17,13 +17,13 @@ Board* board_create(int width, int height){
 	self->fps = 0;
 	self->fps_time = get_time();
 
-	self->board = malloc(width*sizeof(char***));
+	self->board = malloc(height*sizeof(char***));
 
 	int row, col;
 	for (row = 0; row < height; row++){
 		self->board[row] = malloc(width*sizeof(char**));
 		for (col = 0; col < width; col++){
-			self->board[row][col] = strndup("0", 1);
+			self->board[row][col] = strdup("0");
 		}
 	}
 

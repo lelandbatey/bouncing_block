@@ -30,6 +30,11 @@ Trajectory* traj_create(double x_vel, double y_vel, char* color){
 	return self;
 }
 
+void traj_destroy(Trajectory* self){
+	free(self->color);
+	free(self);
+}
+
 
 double traj_getx(Trajectory* self){
 	double t_diff = get_time() - self->start_time;

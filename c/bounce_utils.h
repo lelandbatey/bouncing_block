@@ -66,4 +66,17 @@ double skew_parabola(double num, double low, double high){
 }
 
 
+// Calculate a max velocity for a given height of the display, such that lines
+// will not vertically wrap around.
+int default_vel(int height){
+	// Since there's a random delta applied to the gravity of each line, and
+	// that delta could be as much as -1, we calculate the max height using the
+	// lowest possible gravity that could arise.
+	double gravity = -8.8;
+	double vel = sqrt(-(2 * gravity * height));
+
+	return (int)(floor(vel));
+}
+
+
 #endif

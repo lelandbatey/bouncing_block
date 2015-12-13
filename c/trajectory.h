@@ -18,6 +18,7 @@ typedef struct {
 
 
 Trajectory* traj_create(double x_vel, double y_vel, char* color);
+void traj_destroy(Trajectory* self);
 double traj_getx(Trajectory* self);
 double traj_gety(Trajectory* self);
 void traj_draw(Trajectory* self, Board* board);

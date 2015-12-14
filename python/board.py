@@ -46,23 +46,24 @@ class Board(object):
     def __getitem__(self, key):
         return self.board[key]
 
-    def draw_board(self, debug=False, debug_fields=None):
-        """Draws the board to stdout. Debug cooresponds to column and row
-        labels, debug_fields is a list of additional strings to be printed at
-        the bottom of the board, after the FPS counter."""
-
+    def render_frame(self, debug=False, debug_fields=None):
+        """Creates the string to be printed to stdout. Debug cooresponds to
+        column and row labels, debug_fields is a list of additional strings to
+        be printed at the bottom of the board, after the FPS counter."""
         if debug_fields is None:
             debug_fields = []
         row_label_width = 4
 
+        frame = ""
+
         # Hide the cursor
-        print('\033[?25l', end='')
+        frame += '\033[?25l'
 
         # Move the cursor up the the same number of newlines that've been
         # printed.
         if self.been_drawn:
             for _ in range(self.newlines_drawn):
-                print("\r\033[1A", end="")
+                frame += "\r\033[1A"
             self.newlines_drawn = 0
 
         if debug:
@@ -72,10 +73,10 @@ class Board(object):
         for row_num, row in enumerate(self.board):
             if debug:
                 # Print horizontal row labels
-                print(("{:>"+str(row_label_width)+"}").format(row_num), end="")
+                frame += ("{:>"+str(row_label_width)+"}").format(row_num)
             for col in row:
-                print(col, end="")
-            self.newline()
+                frame += col
+            frame += self.newline()
 
         # Measure and print the number of frames printed in the last second
         self.draw_count += 1
@@ -83,20 +84,29 @@ class Board(object):
             self.fps = self.draw_count
             self.draw_count = 0
             self.fps_time = time.time()
-        print('FPS: ', self.fps, end="")
-        self.newline()
+        frame += 'FPS: {}'.format(self.fps)
+        frame += self.newline()
 
         for entry in debug_fields:
-            print(entry, end="")
-            self.newline()
+            frame += entry
+            frame += self.newline()
 
 
         # Show the cursor
-        print('\033[?25h', end='')
+        frame += '\033[?25h'
         self.been_drawn = True
+        return frame
+
+    def draw_board(self, debug=False, debug_fields=None):
+        """Draws the board to stdout. Debug cooresponds to column and row
+        labels, debug_fields is a list of additional strings to be printed at
+        the bottom of the board, after the FPS counter."""
+        frame = self.render_frame(debug, debug_fields)
+        print(frame, end="")
+
 
     def newline(self):
         """Keeps track of the newlines that've been printed. Done to allow for
         consistent redrawing of the board."""
         self.newlines_drawn += 1
-        print()
+        return '\n'

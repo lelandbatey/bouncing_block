@@ -37,9 +37,9 @@ int main(int argc, char *const *argv) {
 	int opt = 0;
 	//Specifying the expected options
 	static struct option long_options[] = {
-		{"width",   optional_argument, 0,  'x' },
-		{"height",  optional_argument, 0,  'y' },
-		{"max_vel", optional_argument, 0,  'v' },
+		{"width",   required_argument, 0,  'x' },
+		{"height",  required_argument, 0,  'y' },
+		{"max_vel", required_argument, 0,  'v' },
 		{"help",    no_argument,       0,  'h' },
 		{0,         0,                 0,   0  }
 	};

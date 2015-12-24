@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """Terminal drawing primitive."""
 
+from __future__ import print_function
+from __future__ import division
 import time
 
 def print_vert_col_labels(board_width, row_label_width, newline_func):
@@ -44,7 +46,7 @@ class Board(object):
             yield row
 
     def __getitem__(self, key):
-        return self.board[key]
+        return self.board[int(key)]
 
     def render_frame(self, debug=False, debug_fields=None):
         """Creates the string to be printed to stdout. Debug cooresponds to

@@ -3,6 +3,7 @@
 """Draws bouncing arcs to the screen."""
 
 from __future__ import print_function
+from __future__ import division
 import itertools
 import argparse
 import random
@@ -98,7 +99,7 @@ class Line(object):
             self.points = self.points[-self.tail_length:]
 
         for row, col in self.points:
-            board[row][col] = self.point_val
+            board[int(row)][int(col)] = self.point_val
 
     def beyond_age(self, given_age):
         """Returns true if this Line object is as old or older than the given
@@ -151,7 +152,7 @@ class ScrollText(object):
 
         for chr_pos in range(len(self.text)):
             safe_col = (col+chr_pos) % board.width
-            board[row][safe_col] = self.text[chr_pos]
+            board[int(row)][int(safe_col)] = self.text[chr_pos]
 
     def beyond_age(self, given_age):
         """If `self.should_expire` is True, always returns False. Otherwise,
@@ -242,13 +243,14 @@ def skew_parabola(num, low, high):
     skew_val = 1 - (scaled-1)**2
     return skew_val*width + low
 
-def random_velocities(min_vel, max_vel):
+def random_velocities(min_vel, max_vel, count=2000):
     """Creates a list of permuted random velocities within `min_vel` and
     `max_vel`."""
     seed_vels = []
     for num in f_range(min_vel, max_vel, 100):
         seed_vels.append(skew_parabola(num, min_vel, max_vel))
     seed_vels = list(itertools.permutations(seed_vels, 2))
+    seed_vels = random.sample(seed_vels, count)
     return seed_vels
 
 def create_lines(min_vel, max_vel, blocks_count, tail_length):
@@ -279,8 +281,8 @@ def draw_blocks(board, drawables):
         for dc in drawables:
             dc.inject()
             dc.draw(board)
-        obj_count = sum([len(dc) for dc in drawables])
-        board.draw_board(debug_fields=["Line count: {}".format(obj_count)])
+        board.draw_board()
+        time.sleep(0.013)
 
 
 def main():
@@ -325,7 +327,12 @@ def main():
 
     # Default the board width and height to be slightly smaller than the max
     # width and height of the current terminal
-    t_width, t_height = os.get_terminal_size()
+    try:
+        t_width, t_height = os.get_terminal_size()
+    except:
+        import curses
+        t_height, t_width = curses.initscr().getmaxyx()
+        curses.endwin()
     if board_width is None:
         board_width = max(t_width-5, 20)
     if board_height is None:
@@ -371,6 +378,6 @@ if __name__ == '__main__':
         main()
     except KeyboardInterrupt as exception:
         # Show the cursor
-        print('\033[?25h'+('\n'*10), end='')
+        print('\033[?25h', end='')
         exit()
 

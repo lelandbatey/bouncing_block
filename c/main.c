@@ -1,6 +1,17 @@
+
+
+// Allows for printing of preprocessor values
+#define STRING2(x) #x
+#define STRING(x) STRING2(x)
+
+#ifndef _XOPEN_SOURCE
+#define _XOPEN_SOURCE 700
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
+#include <time.h> /* nanosleep */
+#include <stdint.h>
 
 #include <getopt.h> /* getopt */
 
@@ -9,6 +20,13 @@
 #include "bounce_utils.h"
 #include "linked_list.c"
 
+void sleep_hundredth(){
+	struct timespec tim0, tim1;
+	tim0.tv_sec = 0;
+	// One one-hundredth of a second, in nanoseconds
+	tim0.tv_nsec = 10000000L;
+	nanosleep(&tim0, &tim1);
+}
 
 void print_usage(){
 	printf("%s", "TODO: implement usage");
@@ -31,7 +49,6 @@ int main(int argc, char *const *argv) {
 	int j = 0;
 
 
-	int height_passed = 0;
 	int max_vel_passed = 0;
 
 	int opt = 0;
@@ -51,7 +68,7 @@ int main(int argc, char *const *argv) {
 			// `optarg` is a global variable from getopt.h
 			case 'x' : BOARD_WIDTH = atoi(optarg);
 				break;
-			case 'y' : height_passed = 1; BOARD_HEIGHT = atoi(optarg);
+			case 'y' : BOARD_HEIGHT = atoi(optarg);
 				break;
 			case 'v' : max_vel_passed = 1; MAX_VEL = atoi(optarg);
 				break;
@@ -73,7 +90,7 @@ int main(int argc, char *const *argv) {
 
 		y_vel = skew_parabola(y_vel, MIN_VEL, MAX_VEL);
 
-		char* color = random_color();
+		uint8_t* color = random_color();
 		List_push(trajectories, traj_create(x_vel, y_vel, color));
 	}
 
@@ -92,7 +109,7 @@ int main(int argc, char *const *argv) {
 
 				y_vel = skew_parabola(y_vel, MIN_VEL, MAX_VEL);
 
-				char* color = random_color();
+				uint8_t* color = random_color();
 				if (List_count(trajectories) < TRAJ_COUNT){
 					List_push(trajectories, traj_create(x_vel, y_vel, color));
 				}
@@ -103,7 +120,7 @@ int main(int argc, char *const *argv) {
 			traj_draw((Trajectory*)cur->value, b);
 		}
 		board_draw(b);
-		usleep(10000);
+		sleep_hundredth();
 	}
 
 	return 0;

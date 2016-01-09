@@ -1,9 +1,13 @@
-#ifndef BOUNCE_UTILS_H
-#define BOUNCE_UTILS_H
+#pragma once
+
+#ifndef _XOPEN_SOURCE
+#define _XOPEN_SOURCE 700
+#endif
 
 #include <sys/time.h> /* gettimeofday() */
 #include <stdlib.h> /* random() */
 #include <math.h> /* pow() */
+#include <stdint.h>
 
 // Return the current time as a double-precision floating point
 // representing number of seconds which have passed since Epoch.
@@ -47,8 +51,8 @@ char* COLORS[] = {
 	"\033[48;5;208m \033[0m", // Orange
 };
 
-char* random_color(){
-	return COLORS[random() % COLOR_COUNT];
+uint8_t* random_color(){
+	return (uint8_t*)COLORS[random() % COLOR_COUNT];
 }
 
 // Given a `number` and the start and end of the range that number is found in,
@@ -79,4 +83,3 @@ int default_vel(int height){
 }
 
 
-#endif

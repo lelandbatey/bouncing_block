@@ -3,7 +3,7 @@
 TARGET=bounce
 SOURCES=main.c
 
-CFLAGS=-g -Wall -Wextra -static
+CFLAGS=-g -Wall -Wextra -static -std=c11
 LDFLAGS=-lm
 
 all:

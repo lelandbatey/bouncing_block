@@ -1,18 +1,22 @@
+
+#pragma once
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
 #include <errno.h>
+#include <stdint.h>
 
 #include "bounce_utils.h"
 /*#include "board.h"*/
 #include "trajectory.h"
 
 
-Trajectory* traj_create(double x_vel, double y_vel, char* color){
+Trajectory* traj_create(double x_vel, double y_vel, uint8_t* color){
 	Trajectory* self = malloc(sizeof(Trajectory));
 
-	self->color = strdup(color);
+	self->color = (uint8_t*)strdup((char*)color);
 
 	self->start_time = get_time() - (rand_float() * rand_float());
 	self->jump_begin_time = get_time();

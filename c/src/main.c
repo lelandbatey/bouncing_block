@@ -15,10 +15,10 @@
 
 #include <getopt.h> /* getopt */
 
-#include "board.c"
-#include "trajectory.c"
+#include "board.h"
+#include "trajectory.h"
 #include "bounce_utils.h"
-#include "linked_list.c"
+#include "linked_list.h"
 
 void sleep_hundredth(){
 	struct timespec tim0, tim1;
@@ -82,7 +82,6 @@ int main(int argc, char *const *argv) {
 	}
 
 
-	/*Trajectory* trajectories[TRAJ_COUNT];*/
 	List* trajectories = List_create();
 	for (j = 0; j < TRAJ_INIT_COUNT; j++){
 		double x_vel = rand_float_range(MIN_VEL, MAX_VEL);
@@ -96,7 +95,8 @@ int main(int argc, char *const *argv) {
 
 	Board* b = board_create(BOARD_WIDTH, BOARD_HEIGHT);
 
-	int i = 70000;
+	/*int i = 70000;*/
+	int i = 50;
 
 	double clear_time = get_time();
 
@@ -122,6 +122,11 @@ int main(int argc, char *const *argv) {
 		board_draw(b);
 		sleep_hundredth();
 	}
+	LIST_FOREACH(trajectories, first, next, cur){
+		traj_destroy((Trajectory*)cur->value);
+	}
+	List_destroy(trajectories);
+	board_destroy(b);
 
 	return 0;
 }

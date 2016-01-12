@@ -10,14 +10,12 @@ SRCDIR=src
 #CFLAGS=-g -O2 -Wall -Wextra -static -std=c11 -I$(SRCDIR) -I$(IDIR) -rdynamic -DNDEBUG $(OPTFLAGS)
 CFLAGS=-g -O2 -Wall -Wextra -std=c11 -I$(SRCDIR) -I$(IDIR) -rdynamic -DNDEBUG $(OPTFLAGS)
 LDFLAGS=-lm $(OPTLIBS)
-#PREFIX?=/usr/local
 
 
 # Gather list of all *.c files in `src/` and in direct child directories to
 # `src/`. Create an objects file list from the list of c files. Compilation of
 # '.c' files in subdirectories of `src/` will not work at this time.
 SOURCES=$(wildcard $(SRCDIR)/**/*.c $(SRCDIR)/*.c)
-#SOURCE_NAMES_ONLY=
 OBJECTS=$(patsubst $(SRCDIR)/%.c,$(ODIR)/%.o,$(SOURCES))
 
 TEST_SRC=$(wildcard tests/*_tests.c)
@@ -34,7 +32,7 @@ TARGET=build/bounce
 all: build $(TARGET)
 
 $(ODIR)/%.o: $(SRCDIR)/%.c
-	$(CC) $(CFLAGS) -c $(STATIC_FLAGS) $< -o $@ $(LDFLAGS)
+	$(CC) $(CFLAGS) -c $< -o $@ $(LDFLAGS)
 
 $(TARGET): $(OBJECTS)
 	$(CC) $(CFLAGS) -o $(TARGET) $^ $(LDFLAGS)

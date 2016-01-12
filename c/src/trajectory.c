@@ -11,7 +11,6 @@
 #include <stdint.h>
 
 #include "bounce_utils.h"
-/*#include "board.h"*/
 #include "trajectory.h"
 
 
@@ -54,8 +53,6 @@ double traj_gety(Trajectory* self){
 	t_diff *= 2;
 	double y_pos = self->init_y_vel * t_diff + 0.5 * self->gravity * pow(t_diff, 2.0);
 
-	/*printf("t_diff: %lf\n", t_diff);*/
-	/*printf("y_pos : %lf\n", y_pos);*/
 	if (y_pos <= 0.0){
 		y_pos = 0.0;
 		self->jump_begin_time = get_time();
@@ -79,5 +76,25 @@ int traj_beyond_age(Trajectory* self, double given_age){
 	}
 	return 0;
 }
+
+
+Trajectory_settings* traj_settings_create(){
+	Trajectory_settings* self = malloc(sizeof(Trajectory_settings));
+	self->max_count = 900;
+	self->init_count = 300;
+
+	self->inject_count = 10;
+	self->inject_interval = 0.5;
+
+	self->min_velocity = 8;
+	self->max_velocity = 24;
+	
+	return self;
+}
+void traj_settings_destroy(Trajectory_settings* self){
+	free(self);
+}
+
+
 
 

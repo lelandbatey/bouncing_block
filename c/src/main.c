@@ -15,8 +15,9 @@
 
 #include <getopt.h> /* getopt */
 
-#include "board.h"
-#include "trajectory.h"
+/*#include "board.h"*/
+/*#include "trajectory.h"*/
+#include "display_state.h"
 #include "bounce_utils.h"
 #include "linked_list.h"
 
@@ -37,17 +38,8 @@ int main(int argc, char *const *argv) {
 	int BOARD_HEIGHT = 37;
 	int BOARD_WIDTH = 159;
 
-	int TRAJ_COUNT = 900;
-	int TRAJ_INIT_COUNT = 300;
-
-	int INJECT_COUNT = 10;
-	double INJECT_INTERVAL = 0.5;
-
-	int MIN_VEL = 8;
+	// int MIN_VEL = 8;
 	int MAX_VEL = 24;
-
-	int j = 0;
-
 
 	int max_vel_passed = 0;
 
@@ -77,56 +69,23 @@ int main(int argc, char *const *argv) {
 				exit(EXIT_FAILURE);
 		}
 	}
+
+	Display_state* display = disp_create(BOARD_WIDTH, BOARD_HEIGHT);
+
 	if (!max_vel_passed){
-		MAX_VEL = default_vel(BOARD_HEIGHT);
+		display->settings->max_velocity = default_vel(BOARD_HEIGHT);
+	} else {
+		display->settings->max_velocity = MAX_VEL;
 	}
 
-
-	List* trajectories = List_create();
-	for (j = 0; j < TRAJ_INIT_COUNT; j++){
-		double x_vel = rand_float_range(MIN_VEL, MAX_VEL);
-		double y_vel = rand_float_range(MIN_VEL, MAX_VEL);
-
-		y_vel = skew_parabola(y_vel, MIN_VEL, MAX_VEL);
-
-		uint8_t* color = random_color();
-		List_push(trajectories, traj_create(x_vel, y_vel, color));
-	}
-
-	Board* b = board_create(BOARD_WIDTH, BOARD_HEIGHT);
-
-	/*int i = 70000;*/
-	int i = 50;
-
-	double clear_time = get_time();
-
+	display = disp_create_trajectories(display);
+	int i = 10;
 	while (i--){
-		if (get_time() - clear_time > INJECT_INTERVAL){
-			clear_time = get_time();
-			for (j = 0; j < INJECT_COUNT; j++){
-				double x_vel = rand_float_range(MIN_VEL, MAX_VEL);
-				double y_vel = rand_float_range(MIN_VEL, MAX_VEL);
-
-				y_vel = skew_parabola(y_vel, MIN_VEL, MAX_VEL);
-
-				uint8_t* color = random_color();
-				if (List_count(trajectories) < TRAJ_COUNT){
-					List_push(trajectories, traj_create(x_vel, y_vel, color));
-				}
-			}
-		}
-		board_renew(b);
-		LIST_FOREACH(trajectories, first, next, cur){
-			traj_draw((Trajectory*)cur->value, b);
-		}
-		board_draw(b);
+		char* frame = disp_get_frame(display);
+		printf("%s", frame);
+		free(frame);
 		sleep_hundredth();
 	}
-	LIST_FOREACH(trajectories, first, next, cur){
-		traj_destroy((Trajectory*)cur->value);
-	}
-	List_destroy(trajectories);
-	board_destroy(b);
-
+	disp_destroy(display);
 	return 0;
 }

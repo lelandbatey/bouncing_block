@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="iso-8859-1">
+<style type="text/css">
+
+
+.terminal {
+    font-family: Monaco, Menlo, Consolas, 'Courier New', monospace;
+    font-size: 14px;
+}
+.terminal-cursor {
+    color: #000;
+    background: #f0f0f0;
+}
+
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="term.js"></script>
+</head>
+<body>
+    <div id="console">
+    </div>
+</body>
+<script type="text/javascript">
+var display;
+var disp_create;
+var disp_create_trajectories;
+var disp_get_frame;
+
+
+//var get_time = Module.cwrap('get_time', 'number', null);
+
+
+function begin_print_frames(){
+    console.log("Document is ready.");
+    var term = new Terminal({
+        cols: 150,
+        rows: 40,
+        //screenKeys: false,
+        //geometry: [60, 200]
+    });
+    term.open(document.getElementById('console'));
+    function poll(){
+        setTimeout(function(){
+            //console.log("Getting frame.");
+            var cframe = window.disp_get_frame(window.display);
+            var frame = Module.Pointer_stringify(cframe);
+
+            term.write(frame);
+
+            Module._free(cframe);
+            poll();
+        }, 20);
+    }
+    poll();
+};
+
+var Module = {
+    onRuntimeInitialized: function(){
+        disp_create = Module.cwrap('disp_create', 'number', ['number', 'number']);
+        disp_create_trajectories = Module.cwrap('disp_create_trajectories', 'number', ['number']);
+        disp_get_frame = Module.cwrap('disp_get_frame', 'number', ['number']);
+        window.free = Module.cwrap('free', null, ['number']);
+        //console.log(get_time());
+        //console.log(get_time());
+
+        window.display = disp_create(150, 40);
+        window.display = disp_create_trajectories(display);
+        begin_print_frames();
+    }
+};
+/*
+$(document).ready(wait_brython)
+*/
+//$(document).ready(begin_print_frames)
+
+
+</script>
+<script src="bounce.js"></script>
+</html>

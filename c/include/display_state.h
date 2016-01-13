@@ -30,7 +30,7 @@ typedef struct {
  *          Display_state->settings which controls the min and max velocities of the
  *          trajectories created in disp_create_trajectories().
  */
-Display_state* disp_create(int64_t width, int64_t height);
+Display_state* disp_create(int32_t width, int32_t height);
 
 /** @brief Initializes self->trajectories
  *

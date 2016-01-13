@@ -15,7 +15,7 @@
 #include "bounce_utils.h"
 
 
-Display_state* disp_create(int64_t width, int64_t height){
+Display_state* disp_create(int32_t width, int32_t height){
 	Display_state* self = malloc(sizeof(Display_state));
 	self->settings = traj_settings_create();
 	self->last_inject_time = get_time();
@@ -25,9 +25,9 @@ Display_state* disp_create(int64_t width, int64_t height){
 
 Display_state* disp_create_trajectories(Display_state* self){
 	self->trajectories = List_create();
-	for (int64_t i = 0; i < self->settings->init_count; i++){
-		int64_t min_vel = self->settings->min_velocity;
-		int64_t max_vel = self->settings->max_velocity;
+	for (int32_t i = 0; i < self->settings->init_count; i++){
+		int32_t min_vel = self->settings->min_velocity;
+		int32_t max_vel = self->settings->max_velocity;
 		double x_vel = rand_float_range(min_vel, max_vel);
 		double y_vel = rand_float_range(min_vel, max_vel);
 
@@ -60,9 +60,9 @@ char* disp_get_frame(Display_state* self){
 	// Inject trajectories
 	if (get_time() - self->last_inject_time > settings->inject_interval){
 		self->last_inject_time = get_time();
-		for (int64_t i = 0; i < settings->inject_count; i++){
-			int64_t min_vel = settings->min_velocity;
-			int64_t max_vel = settings->max_velocity;
+		for (int32_t i = 0; i < settings->inject_count; i++){
+			int32_t min_vel = settings->min_velocity;
+			int32_t max_vel = settings->max_velocity;
 			double x_vel = rand_float_range(min_vel, max_vel);
 			double y_vel = rand_float_range(min_vel, max_vel);
 
@@ -80,8 +80,9 @@ char* disp_get_frame(Display_state* self){
 		traj_draw((Trajectory*)cur->value, self->dboard);
 	}
 
-	char* frame = board_get_frame(self->dboard);
-	return frame;
+	char* cframe = fast_get_frame(self->dboard);
+	/*printf("%p\n", cframe);*/
+	return cframe;
 }
 
 

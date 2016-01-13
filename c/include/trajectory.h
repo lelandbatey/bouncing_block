@@ -99,14 +99,14 @@ int traj_beyond_age(Trajectory* self, double given_age);
 
 
 typedef struct {
-	int64_t max_count;
-	int64_t init_count;
+	int32_t max_count;
+	int32_t init_count;
 
-	int64_t inject_count;
+	int32_t inject_count;
 	double inject_interval;
 
-	int64_t min_velocity;
-	int64_t max_velocity;
+	int32_t min_velocity;
+	int32_t max_velocity;
 } Trajectory_settings;
 
 Trajectory_settings* traj_settings_create();

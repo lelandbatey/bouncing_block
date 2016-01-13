@@ -19,18 +19,18 @@
  * terminal.
  */
 typedef struct {
-	int64_t width;
-	int64_t height;
+	int32_t width;
+	int32_t height;
 
 	bool been_drawn;
 
 	/// Number of newlines drawn. After the board has been entirely drawn,
 	/// used to move the cursor back to the top of the board.
-	int64_t newlines_drawn;
-	int64_t draw_count;
+	int32_t newlines_drawn;
+	int32_t draw_count;
 
 	/// Number of times this board has been drawn by board_draw() in the prior second
-	int64_t fps;
+	int32_t fps;
 	double fps_time;
 
 	/// Underlying two dimensional array of pointers to strings
@@ -43,7 +43,7 @@ typedef struct {
  *  @param width The number of cells wide the sboard should be.
  *  @param height The number of cells tall the sboard should be.
  */
-Board* board_create(int64_t width, int64_t height);
+Board* board_create(int32_t width, int32_t height);
 
 /** @brief Free the component parts of the sboard before freeing the sboard and Board.
  *
@@ -75,6 +75,8 @@ void board_draw(Board* self);
  */
 char* board_get_frame(Board* self);
 
+char* fast_get_frame(Board* self);
+
 /** @brief Set the contents of cell
  *
  *  Set the contents of cell at (x, y) from the bottom left to a copy of val.
@@ -86,7 +88,7 @@ char* board_get_frame(Board* self);
  *           the value increases.
  *  @param val The string to be copied into the given cell.
  */
-void board_set_cell(Board* self, int64_t x, int64_t y, uint8_t* val);
+void board_set_cell(Board* self, int32_t x, int32_t y, uint8_t* val);
 
 void board_newline(Board* self);
 

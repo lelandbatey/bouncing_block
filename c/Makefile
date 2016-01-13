@@ -8,7 +8,7 @@ SRCDIR=src
 # searching for system headers specified in source code via system header
 # notation (e.g. "include <stdio.h>")
 #CFLAGS=-g -O2 -Wall -Wextra -static -std=c11 -I$(SRCDIR) -I$(IDIR) -rdynamic -DNDEBUG $(OPTFLAGS)
-CFLAGS=-g -O2 -Wall -Wextra -std=c11 -I$(SRCDIR) -I$(IDIR) -rdynamic -DNDEBUG $(OPTFLAGS)
+CFLAGS=-g -O2 -Wall -Wextra -std=c11 -I$(SRCDIR) -I$(IDIR) -rdynamic $(OPTFLAGS)
 LDFLAGS=-lm $(OPTLIBS)
 
 

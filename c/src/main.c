@@ -79,11 +79,12 @@ int main(int argc, char *const *argv) {
 	}
 
 	display = disp_create_trajectories(display);
-	int i = 10;
+	int i = 100;
 	while (i--){
-		char* frame = disp_get_frame(display);
-		printf("%s", frame);
-		free(frame);
+		char* cframe = disp_get_frame(display);
+		/*printf("%s", frame);*/
+		/*printf("%p\n", cframe);*/
+		free(cframe);
 		sleep_hundredth();
 	}
 	disp_destroy(display);

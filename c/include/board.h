@@ -10,6 +10,12 @@
  * @brief Board struct and functions.
  */
 
+/**
+ * Defines the length of each string in each cell of the board.
+ */
+#ifndef BOARD_CELL_LEN
+#define BOARD_CELL_LEN 64
+#endif
 
 /** @brief Two dimensional grid of "cells" of strings. Create with board_create().
  *
@@ -35,6 +41,9 @@ typedef struct {
 
 	/// Underlying two dimensional array of pointers to strings
 	uint8_t*** sboard;
+
+	/// String for printable form of the board.
+	uint8_t* canvas;
 } Board;
 
 /** @brief Initialize a Board struct with a width and height, as well as it's
@@ -69,13 +78,11 @@ void board_draw(Board* self);
  *
  *  The returned string is the result of concatenating the contents of each
  *  cell from left to right, top to bottom, into one single string. This string
- *  is refered to as a "frame".
+ *  is refered to as a "frame". The returned string should not be freed.
  *
  *  @brief self The Board to get the "frame" from.
  */
 char* board_get_frame(Board* self);
-
-char* fast_get_frame(Board* self);
 
 /** @brief Set the contents of cell
  *
@@ -90,5 +97,4 @@ char* fast_get_frame(Board* self);
  */
 void board_set_cell(Board* self, int32_t x, int32_t y, uint8_t* val);
 
-void board_newline(Board* self);
 

@@ -80,7 +80,7 @@ int traj_beyond_age(Trajectory* self, double given_age){
 
 Trajectory_settings* traj_settings_create(){
 	Trajectory_settings* self = malloc(sizeof(Trajectory_settings));
-	self->max_count = 400;
+	self->max_count = 500;
 	self->init_count = 300;
 
 	self->inject_count = 10;

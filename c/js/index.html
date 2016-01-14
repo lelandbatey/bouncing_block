@@ -7,7 +7,7 @@
 
 .terminal {
     font-family: Monaco, Menlo, Consolas, 'Courier New', monospace;
-    font-size: 14px;
+    font-size: 10px;
 }
 .terminal-cursor {
     color: #000;
@@ -35,7 +35,7 @@ var disp_get_frame;
 function begin_print_frames(){
     console.log("Document is ready.");
     var term = new Terminal({
-        cols: 150,
+        cols: 220,
         rows: 40,
         //screenKeys: false,
         //geometry: [60, 200]
@@ -43,15 +43,12 @@ function begin_print_frames(){
     term.open(document.getElementById('console'));
     function poll(){
         setTimeout(function(){
-            //console.log("Getting frame.");
             var cframe = window.disp_get_frame(window.display);
-            var frame = Module.Pointer_stringify(cframe);
 
-            term.write(frame);
+            term.write(cframe);
 
-            Module._free(cframe);
             poll();
-        }, 20);
+        }, 10);
     }
     poll();
 };
@@ -60,12 +57,9 @@ var Module = {
     onRuntimeInitialized: function(){
         disp_create = Module.cwrap('disp_create', 'number', ['number', 'number']);
         disp_create_trajectories = Module.cwrap('disp_create_trajectories', 'number', ['number']);
-        disp_get_frame = Module.cwrap('disp_get_frame', 'number', ['number']);
-        window.free = Module.cwrap('free', null, ['number']);
-        //console.log(get_time());
-        //console.log(get_time());
+        disp_get_frame = Module.cwrap('disp_get_frame', 'string', ['number']);
 
-        window.display = disp_create(150, 40);
+        window.display = disp_create(220, 37);
         window.display = disp_create_trajectories(display);
         begin_print_frames();
     }

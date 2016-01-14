@@ -20,6 +20,9 @@ Display_state* disp_create(int32_t width, int32_t height){
 	self->settings = traj_settings_create();
 	self->last_inject_time = get_time();
 	self->dboard = board_create(width, height);
+
+	self->settings->max_velocity = default_vel(height);
+
 	return self;
 }
 
@@ -80,8 +83,7 @@ char* disp_get_frame(Display_state* self){
 		traj_draw((Trajectory*)cur->value, self->dboard);
 	}
 
-	char* cframe = fast_get_frame(self->dboard);
-	/*printf("%p\n", cframe);*/
+	char* cframe = board_get_frame(self->dboard);
 	return cframe;
 }
 

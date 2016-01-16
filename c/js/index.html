@@ -1,17 +1,42 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="iso-8859-1">
+    <meta charset="iso-8859-1">
+    <title>Bouncing Blocks</title>
+    <link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
 <style type="text/css">
 
 
 .terminal {
     font-family: Monaco, Menlo, Consolas, 'Courier New', monospace;
     font-size: 10px;
+    margin: 0 auto;
 }
 .terminal-cursor {
     color: #000;
     background: #f0f0f0;
+}
+
+.content {
+    width: 1000px;
+    margin: 0 auto;
+    font-family: 'Droid Serif', serif;
+    color: #2e2e2e;
+}
+
+.content-title {
+    text-align: center;
+    font-size: 74px;
+    margin: 40px 0 20px;
+}
+.content-title h1 {
+    font-size: inherit;
+    margin: 0;
+    padding: 0;
+}
+
+.content-text {
+    width: 960px;
 }
 
 </style>
@@ -19,7 +44,14 @@
 <script src="term.js"></script>
 </head>
 <body>
-    <div id="console">
+    <div class="content">
+        <div class="content-title">
+            <h1>Bouncing Blocks</h1>
+        </div>
+        <div id="console" class="terminal">
+        </div>
+        <div class="content-text">
+        </div>
     </div>
 </body>
 <script type="text/javascript">
@@ -28,15 +60,21 @@ var disp_create;
 var disp_create_trajectories;
 var disp_get_frame;
 
-
-//var get_time = Module.cwrap('get_time', 'number', null);
-
+// Because each character is around 6 characters wide (a slight overestimate),
+// and we want the console div to be a certain width (around 1000 pixels), we
+// can ballpark the terminal width with: `term_width = div_width/6`.
+// Additionally, padding the estimated width of each character is probably
+// wise to decrease the likelyhood of overflowing the div.
+//
+// Term character height is about 12 pixels tall, so use a similar formula.
+window.TERM_WIDTH = Math.floor($('#console').first().width()/6.1);
+window.TERM_HEIGHT = Math.max(Math.floor(($(window).height() * 0.6) /11.2), 38);
 
 function begin_print_frames(){
     console.log("Document is ready.");
     var term = new Terminal({
-        cols: 220,
-        rows: 40,
+        cols: TERM_WIDTH,
+        rows: TERM_HEIGHT,
         //screenKeys: false,
         //geometry: [60, 200]
     });
@@ -59,11 +97,12 @@ var Module = {
         disp_create_trajectories = Module.cwrap('disp_create_trajectories', 'number', ['number']);
         disp_get_frame = Module.cwrap('disp_get_frame', 'string', ['number']);
 
-        window.display = disp_create(220, 37);
+        window.display = disp_create(TERM_WIDTH, TERM_HEIGHT);
         window.display = disp_create_trajectories(display);
         begin_print_frames();
     }
 };
+
 /*
 $(document).ready(wait_brython)
 */

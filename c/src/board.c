@@ -30,11 +30,11 @@ Board* board_create(int32_t width, int32_t height){
 	for (int row = 0; row < height; row++){
 		self->sboard[row] = calloc(width, sizeof(uint8_t**));
 		for (int col = 0; col < width; col++){
-			// self->sboard[row][col] = (uint8_t*)strdup("0");
 			self->sboard[row][col] = calloc(BOARD_CELL_LEN, sizeof(uint8_t*));
 		}
 	}
 
+	// Calculate the length of buffer to alloc for `canvas`
 	int32_t up_count = self->height + 1;
 	int32_t up_len = 5;
 
@@ -107,10 +107,6 @@ void board_draw(Board* self){
 
 
 char* board_get_frame(Board* self){
-
-
-	// Create fps string
-
 
 	int32_t ret_pos = 0;
 

@@ -38,7 +38,6 @@ int main(int argc, char *const *argv) {
 	int BOARD_HEIGHT = 37;
 	int BOARD_WIDTH = 159;
 
-	// int MIN_VEL = 8;
 	int MAX_VEL = 24;
 
 	int max_vel_passed = 0;
@@ -83,7 +82,6 @@ int main(int argc, char *const *argv) {
 	while (i--){
 		char* cframe = disp_get_frame(display);
 		printf("%s", cframe);
-		/*free(cframe);*/
 		sleep_hundredth();
 	}
 	disp_destroy(display);

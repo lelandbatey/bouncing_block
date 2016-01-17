@@ -11,6 +11,7 @@
     font-family: Monaco, Menlo, Consolas, 'Courier New', monospace;
     font-size: 10px;
     margin: 0 auto;
+    max-height: 9999999px;
 }
 .terminal-cursor {
     color: #000;
@@ -41,6 +42,11 @@
     line-height: 1.35;
     font-size: 18px;
     word-wrap: break-word;
+}
+
+#bounce-toggle-button {
+    min-height: 28px;
+    margin: 0 0 10px 0;
 }
 
 </style>
@@ -90,6 +96,7 @@ var disp_create;
 var disp_create_trajectories;
 var disp_get_frame;
 
+var safe_height = Math.min($(window).height(), $(window).width(), $('#console').width());
 // Because each character is around 6 characters wide (a slight overestimate),
 // and we want the console div to be a certain width (around 1000 pixels), we
 // can ballpark the terminal width with: `term_width = div_width/6`.
@@ -97,8 +104,8 @@ var disp_get_frame;
 // wise to decrease the likelyhood of overflowing the div.
 //
 // Term character height is about 12 pixels tall, so use a similar formula.
-window.TERM_WIDTH = Math.floor($('#console').first().width()/6.1);
-window.TERM_HEIGHT = Math.max(Math.floor(($(window).height() * 0.6) /11.2), 38);
+window.TERM_WIDTH = Math.floor($('#console').width()/6.1);
+window.TERM_HEIGHT = Math.min(Math.max(Math.floor((safe_height * 0.6) /11.2), 38), 45);
 
 
 function display_check_create(){
@@ -109,7 +116,6 @@ function display_check_create(){
 }
 
 function begin_print_frames(){
-    console.log("Document is ready.");
     var term = new Terminal({
         cols: TERM_WIDTH,
         rows: TERM_HEIGHT,
@@ -145,7 +151,6 @@ var Module = {
 // I am lazy
 window.continue_countdown = true;
 function countdown(val, stepfunc, afterfunc){
-    console.log("Countdown: ", val)
     if (!window.continue_countdown){
         return;
     }
@@ -163,7 +168,6 @@ window.toggle_desc = $('#bounce-toggle-description');
 window.toggle_button.text('Restart bouncing');
 
 function toggle_bounce(){
-    console.log("Toggle bounce");
     window.continue_countdown = false;
     window.toggle_desc.text("");
     if (!window.bounce_state){

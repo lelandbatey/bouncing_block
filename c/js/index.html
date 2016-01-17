@@ -36,7 +36,11 @@
 }
 
 .content-text {
-    width: 960px;
+    margin: 0 auto;
+    width: 620px;
+    line-height: 1.35;
+    font-size: 18px;
+    word-wrap: break-word;
 }
 
 </style>
@@ -48,13 +52,39 @@
         <div class="content-title">
             <h1>Bouncing Blocks</h1>
         </div>
+        <div class="bounce-toggle">
+            <button id="bounce-toggle-button"></button>
+            <span id="bounce-toggle-description"></span>
+        </div>
         <div id="console" class="terminal">
         </div>
         <div class="content-text">
+<h1 id="info">Info</h1>
+<p><a href="https://github.com/lelandbatey/bouncing_block">Bouncing Blocks</a> (BB) was written in C, then compiled to Javascript with Emscripten. Since BB is built to work with a terminal, a terminal emulator implemented in Javascript called <a href="https://github.com/chjj/term.js">Term.js</a> is used to display the program.</p>
+<h1 id="how-it-works">How it Works</h1>
+<p>The display area is represented as a &quot;board&quot;, a two dimensional array of &quot;cells&quot;. Each cell is a string of characters.</p>
+<p>Each colored &quot;block&quot; is modeled as a projectile, so each block has an initial upward velocity and a right-ward velocity. Calculating the vertical position of a block is done by applying the kinematic equation for displacement of a projectile to the amount of time that's passed since the start of the &quot;throw&quot;. When the vertical position of a block would fall below zero, it restarts the &quot;throw&quot;. Horizontal position is calculated by multiplying the age of the block by its right-ward velocity.</p>
+<p>If a block would move beyond the edge of the board, the board wraps that position to the opposite edge of the board. So if a block would move beyond the right edge of the board, the board &quot;wraps&quot; that block back to the left edge of the board.</p>
+<p>The &quot;color&quot; of a block is encoded not as a standard hex value, but instead as an ANSI escape code to set the background of the terminal to a particular color, then a space, then an escape code to reset the background to the default color. This results in a single &quot;block&quot; of color being displayed in the terminal.</p>
+<p>Before each frame is displayed, the contents of the &quot;board&quot; is reset. Then, each &quot;block&quot; has it's position on the board calculated at that moment, and the &quot;color&quot; for that block is copied into it's position on the board.</p>
+<p>Each &quot;frame&quot; of the animation is actually a string. It is composed of:</p>
+<ol style="list-style-type: decimal">
+<li>A series of control sequences to move the cursor to the &quot;top&quot; of the board. This is done so that the rectangular board will be over-written with each frame, giving it the appearance of animation.</li>
+<li>The contents of each cell of the board, in order from left to right, top to bottom, with a new line for each row.</li>
+<li>An additional line showing the number of frames printed in the last second.</li>
+</ol>
+<p>The entire string is then printed to the terminal, resulting in the displayed animation.</p>
+
+        </div>
+        <div style="text-align: center; font-size: 12px; padding: 10px 0 0 20px;">
+            <p>Written by <a href="http://lelandbatey.com/">Leland Batey</a>. Source hosted <a href="https://github.com/lelandbatey/bouncing_block">on Github.</a></p>
         </div>
     </div>
 </body>
 <script type="text/javascript">
+
+window.bounce_state = false;
+
 var display;
 var disp_create;
 var disp_create_trajectories;
@@ -70,6 +100,14 @@ var disp_get_frame;
 window.TERM_WIDTH = Math.floor($('#console').first().width()/6.1);
 window.TERM_HEIGHT = Math.max(Math.floor(($(window).height() * 0.6) /11.2), 38);
 
+
+function display_check_create(){
+    if (!window.display){
+        window.display = disp_create(TERM_WIDTH, TERM_HEIGHT);
+        window.display = disp_create_trajectories(display);
+    }
+}
+
 function begin_print_frames(){
     console.log("Document is ready.");
     var term = new Terminal({
@@ -81,9 +119,12 @@ function begin_print_frames(){
     term.open(document.getElementById('console'));
     function poll(){
         setTimeout(function(){
-            var cframe = window.disp_get_frame(window.display);
+            if (window.bounce_state){
+                display_check_create();
+                var cframe = window.disp_get_frame(window.display);
 
-            term.write(cframe);
+                term.write(cframe);
+            }
 
             poll();
         }, 10);
@@ -97,17 +138,46 @@ var Module = {
         disp_create_trajectories = Module.cwrap('disp_create_trajectories', 'number', ['number']);
         disp_get_frame = Module.cwrap('disp_get_frame', 'string', ['number']);
 
-        window.display = disp_create(TERM_WIDTH, TERM_HEIGHT);
-        window.display = disp_create_trajectories(display);
         begin_print_frames();
     }
 };
 
-/*
-$(document).ready(wait_brython)
-*/
-//$(document).ready(begin_print_frames)
+// I am lazy
+window.continue_countdown = true;
+function countdown(val, stepfunc, afterfunc){
+    console.log("Countdown: ", val)
+    if (!window.continue_countdown){
+        return;
+    }
+    stepfunc(val);
+    if (val == 0){
+        afterfunc();
+    } else {
+        setTimeout(function(){countdown(val-1, stepfunc, afterfunc);}, 1000);
+    }
+}
 
+window.toggle_button = $('#bounce-toggle-button');
+window.toggle_desc = $('#bounce-toggle-description');
+
+window.toggle_button.text('Restart bouncing');
+
+function toggle_bounce(){
+    console.log("Toggle bounce");
+    window.continue_countdown = false;
+    window.toggle_desc.text("");
+    if (!window.bounce_state){
+        window.toggle_button.text("Stop bouncing");
+    } else {
+        window.toggle_button.text("Restart bouncing");
+    }
+    window.bounce_state = (!window.bounce_state);
+}
+window.toggle_button.bind('click', toggle_bounce);
+
+$(document).ready(countdown(8, function(val){
+    window.toggle_desc.text("Starting bouncing in: "+String(val));
+}, toggle_bounce));
 
 </script>
 <script src="bounce.js"></script>

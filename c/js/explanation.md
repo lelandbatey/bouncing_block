@@ -1,5 +1,5 @@
 
-## Info
+# Info
 
 [Bouncing Blocks](https://github.com/lelandbatey/bouncing_block) (BB) was written in C, then compiled to Javascript with Emscripten. Since BB is built to work with a terminal, a terminal emulator implemented in Javascript called [Term.js](https://github.com/chjj/term.js) is used to display the program.
 
@@ -7,7 +7,7 @@
 
 The display area is represented as a "board", a two dimensional array of "cells". Each cell is a string of characters.
 
-Each colored "block" is modeled as a projectile, so each block has an initial upward velocity and a right-ward velocity. Calculating the vertical position of a block is done using the amount of time that's passed since the start of the "throw", then applying the kinematic equation for displacement of a projectile. When the horizontal position of a block would fall below zero, it restarts the "throw". Horizontal position is calculated by multiplying the age of the block by the right-ward velocity.
+Each colored "block" is modeled as a projectile, so each block has an initial upward velocity and a right-ward velocity. Calculating the vertical position of a block is done by applying the kinematic equation for displacement of a projectile to the amount of time that's passed since the start of the "throw". When the vertical position of a block would fall below zero, it restarts the "throw". Horizontal position is calculated by multiplying the age of the block by its right-ward velocity.
 
 If a block would move beyond the edge of the board, the board wraps that position to the opposite edge of the board. So if a block would move beyond the right edge of the board, the board "wraps" that block back to the left edge of the board.
 

@@ -80,12 +80,12 @@ int traj_beyond_age(Trajectory* self, double given_age){
 
 Trajectory_settings* traj_settings_create(){
 	Trajectory_settings* self = malloc(sizeof(Trajectory_settings));
-	
+
 	// Hard code these default values for trajectories
 	self->max_count = 500;
-	self->init_count = 200;
+	self->init_count = 300;
 
-	self->inject_count = 20;
+	self->inject_count = 10;
 	self->inject_interval = 0.5;
 
 	self->min_velocity = 8;
